@@ -57,8 +57,8 @@ dependencies {
     testImplementation 'io.kotlintest:kotlintest-runner-junit5:3.1.0'
     testImplementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.6.1'
     testImplementation junit5.unitTests()
-    androidTestImplementation 'androidx.test:runner:1.1.0-alpha2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha2'
+    androidTestImplementation 'androidx.test:runner:1.1.0-alpha3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha3'
 }
 
 detekt {
