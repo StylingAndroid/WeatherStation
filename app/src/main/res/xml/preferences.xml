@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+  android:title="@string/units">
+  <ListPreference
+    android:defaultValue="mph"
+    android:entries="@array/speed_entries"
+    android:entryValues="@array/speed_values"
+    android:key="@string/speed_units"
+    android:summary="%s"
+    android:title="@string/speed_units" />
+  <ListPreference
+    android:defaultValue="celsius"
+    android:entries="@array/temperature_entries"
+    android:entryValues="@array/temperature_values"
+    android:key="@string/temperature_units"
+    android:summary="%s"
+    android:title="@string/temperature_units" />
+</PreferenceScreen>

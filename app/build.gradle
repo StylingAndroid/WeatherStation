@@ -1,0 +1,76 @@
+plugins {
+    id "io.gitlab.arturbosch.detekt" version "1.0.0.RC7"
+}
+
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: "de.mannodermaus.android-junit5"
+apply plugin: "jacoco"
+
+android {
+    compileSdkVersion 'Google Inc.:Google APIs:21'
+    defaultConfig {
+        applicationId "com.stylingandroid.weatherstation"
+        minSdkVersion 24
+        targetSdkVersion 28
+        compileSdkVersion 'android-P'
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField "String", "API_KEY", "\"$openWeatherMapsApiKey\""
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    testOptions {
+        junitPlatform {
+            details "none"
+            jacocoOptions {
+                html {
+                    enabled true
+                }
+            }
+        }
+    }
+}
+
+dependencies {
+    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.appcompat:appcompat:1.0.0-alpha1'
+    implementation 'androidx.preference:preference:1.0.0-alpha1'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.0'
+    implementation 'androidx.core:core-ktx:1.0.0-alpha1'
+    implementation 'androidx.fragment:fragment-ktx:1.0.0-alpha1'
+    implementation 'com.google.android.gms:play-services-location:15.0.1'
+    implementation 'com.google.android.material:material:1.0.0-alpha1'
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
+    implementation 'com.squareup.moshi:moshi-kotlin:1.6.0'
+    implementation 'com.squareup.retrofit2:converter-moshi:2.4.0'
+    implementation 'com.jakewharton.threetenabp:threetenabp:1.0.5'
+    testImplementation 'junit:junit:4.12'
+    testImplementation "com.nhaarman:mockito-kotlin:1.5.0"
+    testImplementation 'io.kotlintest:kotlintest-runner-junit5:3.1.0'
+    testImplementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.6.1'
+    testImplementation junit5.unitTests()
+    androidTestImplementation 'androidx.test:runner:1.1.0-alpha2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha2'
+}
+
+detekt {
+    version = "1.0.0.RC7"
+    profile("main") {
+        input = "$projectDir/src/main/java"
+        config = "$projectDir/detekt.yml"
+        output = "$project.buildDir/reports/detekt.xml"
+        //outputFormat = "xml"
+        filters = ".*test.*,.*/resources/.*,.*/tmp/.*"
+    }
+}
+
+check.dependsOn detektCheck
+

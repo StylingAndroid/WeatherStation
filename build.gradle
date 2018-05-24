@@ -1,0 +1,43 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    ext.kotlin_version = '1.2.41'
+    repositories {
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.2.0-alpha15'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "de.mannodermaus.gradle.plugins:android-junit5:1.0.32"
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+
+ext {
+    openWeatherMapsApiKey = loadValues().getProperty('API_KEY')
+}
+
+def loadValues() {
+    Properties localProperties = new Properties()
+    if (project.rootProject.file('local.properties').exists()) {
+        localProperties.load(project.rootProject.file('local.properties').newDataInputStream())
+    } else {
+        localProperties.setProperty('API_KEY', System.getenv("API_KEY"))
+    }
+    return localProperties
+}

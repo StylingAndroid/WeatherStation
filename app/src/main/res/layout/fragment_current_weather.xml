@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/content_panel"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <com.google.android.material.card.MaterialCardView
+    android:id="@+id/card"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:backgroundTint="#EEE"
+    android:elevation="4dp"
+    app:layout_constraintBottom_toBottomOf="@id/timestamp"
+    app:layout_constraintEnd_toEndOf="@id/type_image"
+    app:layout_constraintStart_toStartOf="@id/city"
+    app:layout_constraintTop_toTopOf="@id/type_image" />
+
+  <TextView
+    android:id="@+id/city"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    android:paddingEnd="8dp"
+    android:paddingStart="8dp"
+    android:textSize="16sp"
+    app:layout_constraintEnd_toStartOf="@+id/wind_direction"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="@+id/temperature"
+    tools:text="Location" />
+
+  <TextView
+    android:id="@+id/temperature"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="8dp"
+    android:textSize="32sp"
+    app:layout_constraintBottom_toBottomOf="@+id/type_image"
+    app:layout_constraintEnd_toStartOf="@+id/type_image"
+    app:layout_constraintTop_toTopOf="@+id/type_image"
+    tools:text="18°C" />
+
+  <TextView
+    android:id="@+id/summary"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    android:textSize="16sp"
+    app:layout_constraintBottom_toBottomOf="@+id/temperature"
+    app:layout_constraintEnd_toEndOf="@+id/city"
+    app:layout_constraintStart_toStartOf="parent"
+    tools:text="Sunny" />
+
+  <ImageView
+    android:id="@+id/wind_direction"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="8dp"
+    android:contentDescription="@null"
+    android:importantForAccessibility="no"
+    app:layout_constraintBottom_toBottomOf="@+id/temperature"
+    app:layout_constraintEnd_toStartOf="@+id/temperature"
+    app:layout_constraintTop_toTopOf="@+id/temperature"
+    app:srcCompat="@drawable/ic_wind" />
+
+  <TextView
+    android:id="@+id/wind_speed"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:textColor="#FFF"
+    app:layout_constraintBottom_toBottomOf="@+id/wind_direction"
+    app:layout_constraintEnd_toEndOf="@+id/wind_direction"
+    app:layout_constraintStart_toStartOf="@+id/wind_direction"
+    app:layout_constraintTop_toTopOf="@+id/wind_direction"
+    tools:text="8" />
+
+  <ImageView
+    android:id="@+id/type_image"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:contentDescription="@string/weather_type_icon"
+    android:padding="8dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:srcCompat="@drawable/ic_50d" />
+
+  <TextView
+    android:id="@+id/timestamp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="8dp"
+    app:layout_constraintEnd_toEndOf="@id/type_image"
+    app:layout_constraintTop_toBottomOf="@id/type_image" />
+
+  <androidx.constraintlayout.widget.Group
+    android:id="@+id/all_widgets"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:elevation="4dp"
+    android:visibility="gone"
+    app:constraint_referenced_ids="card,summary,city,temperature,wind_speed,wind_direction,type_image,timestamp" />
+</androidx.constraintlayout.widget.ConstraintLayout>

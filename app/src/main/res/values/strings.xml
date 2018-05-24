@@ -1,0 +1,44 @@
+<resources>
+  <string name="app_name">WeatherStation</string>
+  <string name="this_app_can_only_work_if_you_grant_the_location_permission">This app can only work if you grant the Location permission</string>
+  <string name="wind_speed">%1$.0f</string>
+  <string name="temperature_celsius">%1$.0f°C</string>
+  <string name="temperature_fahrenheit">%1$.0f°F</string>
+  <string name="temperature_kelvin">%1$.0fK</string>
+  <string name="units">Units</string>
+  <string name="current_weather">Current Weather</string>
+  <string name="action_settings">Settings</string>
+  <string name="weather_type_icon">Weather Type icon</string>
+  <string name="speed_units">Speed</string>
+  <string name="speed_miles_name">Miles per hour</string>
+  <string name="speed_metres_name">Metres per second</string>
+  <string name="speed_miles_value">mph</string>
+  <string name="speed_metres_value">mps</string>
+
+  <string-array name="speed_entries">
+    <item>@string/speed_miles_name</item>
+    <item>@string/speed_metres_name</item>
+  </string-array>
+
+  <string-array name="speed_values">
+    <item>@string/speed_miles_value</item>
+    <item>@string/speed_metres_value</item>
+  </string-array>
+
+  <string name="temperature_units">Temperature</string>
+  <string name="temperature_fahrenheit_name">Fahrenheit</string>
+  <string name="temperature_celsius_name">Celsius</string>
+  <string name="temperature_fahrenheit_value">fahrenheit</string>
+  <string name="temperature_celsius_value">celsius</string>
+
+  <string-array name="temperature_entries">
+    <item>@string/temperature_fahrenheit_name</item>
+    <item>@string/temperature_celsius_name</item>
+  </string-array>
+
+  <string-array name="temperature_values">
+    <item>@string/temperature_fahrenheit_value</item>
+    <item>@string/temperature_celsius_value</item>
+  </string-array>
+
+</resources>
