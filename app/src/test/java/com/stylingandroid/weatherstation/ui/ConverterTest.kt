@@ -1,4 +1,4 @@
-package com.stylingandroid.weatherstation
+package com.stylingandroid.weatherstation.ui
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -9,6 +9,7 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
+import com.stylingandroid.weatherstation.R
 import io.kotlintest.matchers.endWith
 import io.kotlintest.should
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -19,13 +20,15 @@ import org.junit.jupiter.api.Test
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyString
+import org.threeten.bp.Instant
+import org.threeten.bp.ZoneId
+import java.util.Locale
 
 class ConverterTest {
     private val context: Context = mock()
     private val sharedPreferences: SharedPreferences = mock()
-    private val converter = Converter(context, sharedPreferences)
+    private val converter = Converter(context, sharedPreferences, Locale.UK, ZoneId.of("Europe/London"))
     private val floatArgumentCaptor = ArgumentCaptor.forClass(Float::class.java)
-    private val intArgumentCaptor = ArgumentCaptor.forClass(Int::class.java)
 
     @BeforeEach
     fun setup() {
@@ -210,5 +213,15 @@ class ConverterTest {
             }
 
         }
+    }
+
+    @Test
+    @DisplayName("Given a time of 10:53:11 When we convert it to a String Then the correct string is produced")
+    fun testTimeFormat() {
+        val instant = Instant.ofEpochMilli(1514803991000)
+
+        val value = converter.timeString(instant)
+
+        assertEquals("10:53", value)
     }
 }

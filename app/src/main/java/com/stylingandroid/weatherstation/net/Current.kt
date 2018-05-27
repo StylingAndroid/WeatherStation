@@ -1,6 +1,7 @@
-package com.stylingandroid.weatherstation.model
+package com.stylingandroid.weatherstation.net
 
 import com.squareup.moshi.Json
+import com.stylingandroid.weatherstation.model.CurrentWeather
 import org.threeten.bp.Instant
 
 data class Current(
@@ -8,19 +9,21 @@ data class Current(
         @Json(name = "weather") val weather: List<Weather>,
         @Json(name = "main") val temperaturePressure: TemperaturePressure,
         @Json(name = "wind") val wind: Wind,
-        @Json(name = "clouds") val clouds: Clouds,
-        @Json(name = "rain") val rain: Precipitation?,
-        @Json(name = "snow") val snow: Precipitation?,
         @Json(name = "dt") val timestamp: Long,
-        @Json(name = "sys") val sys: Sys,
-        @Json(name = "id") val id: String,
         @Json(name = "name") val name: String
 ) {
     val time: Instant by lazy { Instant.ofEpochSecond(timestamp) }
-}
 
-data class Sys(
-        @Json(name = "country") val country: String,
-        @Json(name = "sunrise") val sunrise: Long,
-        @Json(name = "sunset") val sunset: Long
-)
+    val currentWeather = CurrentWeather(
+            coordinates.latitude,
+            coordinates.longitude,
+            name,
+            temperaturePressure.temperature,
+            wind.speed ?: 0f,
+            wind.direction ?: 0f,
+            weather[0].main,
+            weather[0].description,
+            weather[0].icon,
+            time
+    )
+}
