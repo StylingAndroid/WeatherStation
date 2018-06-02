@@ -52,7 +52,7 @@ class OpenWeatherMapProviderTest {
                 .addConverterFactory(converterFactory)
                 .build()
         service = retrofit.create(OpenWeatherMap::class.java)
-        provider = OpenWeatherMapProvider(context, API_KEY, service = service, calls = calls)
+        provider = OpenWeatherMapProvider(service, API_KEY, calls)
     }
 
     @Nested

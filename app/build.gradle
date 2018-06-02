@@ -5,6 +5,7 @@ plugins {
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 apply plugin: "de.mannodermaus.android-junit5"
 apply plugin: "jacoco"
 
@@ -52,6 +53,10 @@ dependencies {
     implementation 'com.squareup.moshi:moshi-kotlin:1.6.0'
     implementation 'com.squareup.retrofit2:converter-moshi:2.4.0'
     implementation 'com.jakewharton.threetenabp:threetenabp:1.0.5'
+    implementation 'com.google.dagger:dagger:2.16'
+    implementation 'com.google.dagger:dagger-android-support:2.16'
+    kapt 'com.google.dagger:dagger-compiler:2.16'
+    kapt "com.google.dagger:dagger-android-processor:2.16"
     testImplementation 'junit:junit:4.12'
     testImplementation "com.nhaarman:mockito-kotlin:1.5.0"
     testImplementation 'io.kotlintest:kotlintest-runner-junit5:3.1.0'
@@ -82,8 +87,13 @@ task jacocoTestReport(type: JacocoReport, dependsOn: "testDebugUnitTest") {
             '**/Manifest*.*',
             '**/*Test*.*',
             'android/**/*.*',
-            '**/*Fragment.*',
-            '**/*Activity.*'
+            '**/*Module.*',
+            '**/*ViewModel_Factory.*',
+            '**/*_MembersInjector.class',
+            '**/Dagger*Component.class', // covers component implementations
+            '**/Dagger*Component$**', // covers component implementations
+            '**/Dagger*Component$Builder.class', // covers component builders
+            '**/*Module_*Factory.class'
     ]
     // generated classes
     classDirectories = fileTree(

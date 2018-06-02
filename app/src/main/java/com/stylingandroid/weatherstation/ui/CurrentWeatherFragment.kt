@@ -13,26 +13,30 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.transaction
 import androidx.transition.TransitionManager
-import com.stylingandroid.weatherstation.BuildConfig
 import com.stylingandroid.weatherstation.R
-import com.stylingandroid.weatherstation.location.FusedLocationProvider
 import com.stylingandroid.weatherstation.location.LocationProvider
 import com.stylingandroid.weatherstation.model.CurrentWeather
 import com.stylingandroid.weatherstation.net.CurrentWeatherProvider
-import com.stylingandroid.weatherstation.net.OpenWeatherMapProvider
+import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_current_weather.*
+import javax.inject.Inject
 
 
 class CurrentWeatherFragment : Fragment() {
 
-    private lateinit var locationProvider: LocationProvider
-    private lateinit var currentWeatherProvider: CurrentWeatherProvider
+    @Inject lateinit var locationProvider: LocationProvider
+    @Inject lateinit var currentWeatherProvider: CurrentWeatherProvider
 
     private lateinit var converter: Converter
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         inflater?.inflate(R.menu.main_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        AndroidSupportInjection.inject(this)
+        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(
@@ -44,8 +48,6 @@ class CurrentWeatherFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        locationProvider = FusedLocationProvider(context)
-        currentWeatherProvider = OpenWeatherMapProvider(context, BuildConfig.API_KEY)
         converter = Converter(context)
     }
 
