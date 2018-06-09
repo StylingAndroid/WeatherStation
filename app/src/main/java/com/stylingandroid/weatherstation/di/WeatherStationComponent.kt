@@ -15,7 +15,8 @@ import javax.inject.Singleton
     AndroidBuilder::class,
     WeatherStationModule::class,
     LocationModule::class,
-    WeatherModule::class
+    WeatherModule::class,
+    ViewModelModule::class
 ])
 interface WeatherStationComponent {
 
@@ -23,7 +24,7 @@ interface WeatherStationComponent {
     interface Builder {
 
         @BindsInstance
-        fun application(application: Application) : Builder
+        fun application(application: Application): Builder
 
         fun build(): WeatherStationComponent
     }

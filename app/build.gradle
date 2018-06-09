@@ -13,7 +13,7 @@ android {
     compileSdkVersion 'Google Inc.:Google APIs:21'
     defaultConfig {
         applicationId "com.stylingandroid.weatherstation"
-        minSdkVersion 24
+        minSdkVersion 26
         targetSdkVersion 28
         compileSdkVersion 'android-P'
         versionCode 1
@@ -37,17 +37,23 @@ android {
             }
         }
     }
+    packagingOptions {
+        exclude 'META-INF/LICENSE.md'
+        exclude 'META-INF/LICENSE-notice.md'
+    }
 }
 
 dependencies {
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.0.0-alpha1'
-    implementation 'androidx.preference:preference:1.0.0-alpha1'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:1.2.41"
+    implementation 'androidx.appcompat:appcompat:1.0.0-alpha3'
+    implementation 'androidx.preference:preference:1.0.0-alpha3'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.0'
-    implementation 'androidx.core:core-ktx:1.0.0-alpha1'
-    implementation 'androidx.fragment:fragment-ktx:1.0.0-alpha1'
+    implementation 'androidx.core:core-ktx:1.0.0-alpha3'
+    implementation 'androidx.fragment:fragment-ktx:1.0.0-alpha3'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0-alpha1'
     implementation 'com.google.android.gms:play-services-location:15.0.1'
-    implementation 'com.google.android.material:material:1.0.0-alpha1'
+    implementation 'com.google.android.material:material:1.0.0-alpha3'
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
     implementation 'com.squareup.moshi:moshi-kotlin:1.6.0'

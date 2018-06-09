@@ -12,11 +12,12 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.transaction
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.transition.TransitionManager
 import com.stylingandroid.weatherstation.R
-import com.stylingandroid.weatherstation.location.LocationProvider
 import com.stylingandroid.weatherstation.model.CurrentWeather
-import com.stylingandroid.weatherstation.net.CurrentWeatherProvider
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_current_weather.*
 import javax.inject.Inject
@@ -24,8 +25,9 @@ import javax.inject.Inject
 
 class CurrentWeatherFragment : Fragment() {
 
-    @Inject lateinit var locationProvider: LocationProvider
-    @Inject lateinit var currentWeatherProvider: CurrentWeatherProvider
+    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private lateinit var currentWeatherViewModel: CurrentWeatherViewModel
 
     private lateinit var converter: Converter
 
@@ -37,6 +39,15 @@ class CurrentWeatherFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
+
+        currentWeatherViewModel = ViewModelProviders.of(this, viewModelFactory)
+                .get(CurrentWeatherViewModel::class.java)
+
+        currentWeatherViewModel.currentWeather.observe(this, Observer<CurrentWeather> { current ->
+            current?.apply {
+                bind(current)
+            }
+        })
     }
 
     override fun onCreateView(
@@ -63,12 +74,7 @@ class CurrentWeatherFragment : Fragment() {
                     setDisplayHomeAsUpEnabled(false)
                 }
             }
-            locationProvider.requestUpdates(::retrieveForecast)
         }
-    }
-
-    private fun retrieveForecast(latitude: Double, longitude: Double) {
-        currentWeatherProvider.request(latitude, longitude, ::bind)
     }
 
     private fun bind(current: CurrentWeather) {
@@ -101,9 +107,4 @@ class CurrentWeatherFragment : Fragment() {
                 }
                 else -> super.onOptionsItemSelected(item)
             }
-
-    override fun onPause() {
-        locationProvider.cancelUpdates(::retrieveForecast)
-        super.onPause()
-    }
 }
