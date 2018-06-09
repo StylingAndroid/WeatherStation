@@ -13,7 +13,7 @@ android {
     compileSdkVersion 'Google Inc.:Google APIs:21'
     defaultConfig {
         applicationId "com.stylingandroid.weatherstation"
-        minSdkVersion 26
+        minSdkVersion 24
         targetSdkVersion 28
         compileSdkVersion 'android-P'
         versionCode 1
