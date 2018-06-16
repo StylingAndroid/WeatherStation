@@ -31,8 +31,8 @@ class CurrentWeatherLiveDataTest {
     private val currentWeatherProvider: CurrentWeatherProvider =
             TestCurrentWeatherProvider()
 
-    private val currentWeatherLiveData: CurrentWeatherLiveData =
-            CurrentWeatherLiveData(locationProvider, currentWeatherProvider)
+    private val currentWeatherLiveData: CurrentWeatherRepository =
+            CurrentWeatherRepository(locationProvider, currentWeatherProvider)
 
     @BeforeEach
     fun setup() {
@@ -41,7 +41,7 @@ class CurrentWeatherLiveDataTest {
     }
 
     @Nested
-    @DisplayName("Given a CurrentWeatherLiveData which is not active")
+    @DisplayName("Given a CurrentWeatherRepository which is not active")
     inner class Inactive {
         @BeforeEach
         fun setup() {
@@ -66,7 +66,7 @@ class CurrentWeatherLiveDataTest {
     }
 
     @Nested
-    @DisplayName("Given a CurrentWeatherLiveData which is active")
+    @DisplayName("Given a CurrentWeatherRepository which is active")
     inner class Active {
         @BeforeEach
         fun setup() {
@@ -93,7 +93,7 @@ class CurrentWeatherLiveDataTest {
     }
 
     @Nested
-    @DisplayName("Given a CurrentWeatherLiveData which was active")
+    @DisplayName("Given a CurrentWeatherRepository which was active")
     inner class WasActive {
         @BeforeEach
         fun setup() {

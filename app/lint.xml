@@ -6,7 +6,4 @@
   <issue id="UnusedResources">
     <ignore regexp=".*ic_\d\d[d|n]\.xml" />
   </issue>
-  <issue id="GradleDependency">
-    <ignore regexp=".*constraintlayout.*" />
-  </issue>
 </lint>
