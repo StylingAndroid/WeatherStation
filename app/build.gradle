@@ -130,7 +130,7 @@ task jacocoTestReport(type: JacocoReport, dependsOn: "testNormalDebugUnitTest") 
             android.sourceSets.main.java.srcDirs,
             "src/main/kotlin"
     ])
-    executionData = files("$buildDir/jacoco/testDebugUnitTest.exec")
+    executionData = files("$buildDir/jacoco/junitPlatformTestNormalDebug.exec")
 }
 
 detekt {
