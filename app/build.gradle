@@ -49,9 +49,6 @@ android {
         oreo {
             dimension "sdk"
             minSdkVersion 26
-//            lintOptions {
-//                tasks.lint.enabled = false
-//            }
         }
     }
 }
