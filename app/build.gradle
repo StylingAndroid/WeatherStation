@@ -118,10 +118,10 @@ task jacocoTestReport(type: JacocoReport, dependsOn: "testNormalDebugUnitTest") 
     ]
     // generated classes
     classDirectories = fileTree(
-            dir: "$buildDir/intermediates/classes/debug",
+            dir: "$buildDir/intermediates/classes/normalDebug",
             excludes: excludes
     ) + fileTree(
-            dir: "$buildDir/tmp/kotlin-classes/debug",
+            dir: "$buildDir/tmp/kotlin-classes/normalDebug",
             excludes: excludes
     )
 
@@ -130,7 +130,7 @@ task jacocoTestReport(type: JacocoReport, dependsOn: "testNormalDebugUnitTest") 
             android.sourceSets.main.java.srcDirs,
             "src/main/kotlin"
     ])
-    executionData = files("$buildDir/jacoco/junitPlatformTestNormalDebug.exec")
+    executionData = files("$buildDir/jacoco/*NormalDebug.exec")
 }
 
 detekt {
