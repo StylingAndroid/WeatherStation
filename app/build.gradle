@@ -89,7 +89,7 @@ dependencies {
     androidTestOreoImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha3'
 }
 
-task jacocoTestReport(type: JacocoReport, dependsOn: "testNormalDebugUnitTest") {
+task jacocoTestReport(type: JacocoReport, dependsOn: "junitPlatformTestNormalDebug") {
     group = "Reporting"
     description = "Generate Jacoco coverage reports for Debug build"
 
@@ -118,7 +118,7 @@ task jacocoTestReport(type: JacocoReport, dependsOn: "testNormalDebugUnitTest") 
     ]
     // generated classes
     classDirectories = fileTree(
-            dir: "$buildDir/intermediates/classes/normalDebug",
+            dir: "$buildDir/intermediates/javac/**/normalDebug/**/",
             excludes: excludes
     ) + fileTree(
             dir: "$buildDir/tmp/kotlin-classes/normalDebug",
