@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.stylingandroid.weatherstation.model.CurrentWeather
-import com.stylingandroid.weatherstation.model.CurrentWeatherLiveData
+import com.stylingandroid.weatherstation.model.CurrentWeatherRepository
 import com.stylingandroid.weatherstation.ui.CurrentWeatherViewModel
 import dagger.Binds
 import dagger.MapKey
@@ -25,7 +25,7 @@ annotation class ViewModelKey(val value: KClass<out ViewModel>)
 abstract class ViewModelModule {
 
     @Binds
-    abstract fun bindLiveData(currentWeatherLiveData: CurrentWeatherLiveData): LiveData<CurrentWeather>
+    abstract fun bindRepository(currentWeatherLiveData: CurrentWeatherRepository): LiveData<CurrentWeather>
 
     @Binds
     @IntoMap

@@ -51,7 +51,10 @@ class CurrentWeatherFragmentTest {
             "Clear",
             "Clear",
             "01d",
-            Instant.now()
+            Instant.now(),
+            Instant.now(),
+            1f,
+            2f
     )
 
     @Test

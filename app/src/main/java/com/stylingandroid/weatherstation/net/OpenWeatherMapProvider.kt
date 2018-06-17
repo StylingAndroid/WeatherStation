@@ -32,8 +32,8 @@ class OpenWeatherMapProvider(
         override fun onResponse(call: Call<Current>?, response: Response<Current>?) {
             calls.remove(call)
             println("Response: $response")
-            response?.body()?.also {
-                callback(it.currentWeather)
+            response?.body()?.apply {
+                callback(currentWeather)
             }
         }
     }

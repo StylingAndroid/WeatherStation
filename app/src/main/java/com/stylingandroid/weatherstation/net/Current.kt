@@ -24,6 +24,9 @@ data class Current(
             weather[0].main,
             weather[0].description,
             weather[0].icon,
-            time
+            time,
+            Instant.now(),
+            0f,
+            0f
     )
 }
