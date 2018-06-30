@@ -16,6 +16,8 @@ data class Weather(
 
 data class TemperaturePressure(
         @Json(name = "temp") val temperature: Float,
+        @Json(name = "temp_max") val temperatureMax: Float,
+        @Json(name = "temp_min") val temperatureMin: Float,
         @Json(name = "pressure") val pressure: Float
 )
 

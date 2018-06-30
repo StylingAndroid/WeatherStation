@@ -13,7 +13,7 @@ import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import com.stylingandroid.weatherstation.InstantTaskExecutorExtension
 import com.stylingandroid.weatherstation.location.LocationProvider
-import com.stylingandroid.weatherstation.net.CurrentWeatherProvider
+import com.stylingandroid.weatherstation.net.WeatherProvider
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -31,19 +31,19 @@ class CurrentWeatherRepositoryTest {
     private val currentWeatherDao: CurrentWeatherDao = mock()
     private val distanceChecker: DistanceChecker = mock()
 
-    private val currentWeatherProvider: CurrentWeatherProvider =
-            spy(TestCurrentWeatherProvider())
+    private val weatherProvider: WeatherProvider =
+            spy(TestWeatherProvider())
 
     private val currentWeatherRepository: CurrentWeatherRepository = CurrentWeatherRepository(
-            locationProvider, currentWeatherProvider, currentWeatherDao, distanceChecker
+            weatherProvider, currentWeatherDao, locationProvider, distanceChecker
     )
 
     @BeforeEach
     fun setup() {
         whenever(lifecycleOwner.lifecycle).thenReturn(lifecycleRegistry)
         whenever(currentWeatherDao.getAllLocations()).thenReturn(emptyList())
-        whenever(currentWeatherDao.insertCurrentWeather(any())).thenReturn(1)
-        currentWeatherRepository.observe(lifecycleOwner, observer)
+        whenever(currentWeatherDao.insert(any())).thenReturn(1)
+        currentWeatherRepository.currentWeather.observe(lifecycleOwner, observer)
     }
 
     @Nested
@@ -147,10 +147,10 @@ class CurrentWeatherRepositoryTest {
                 locationProvider.trigger()
             }
 
-            @DisplayName("Then we make a call to the CurrentWeatherProvider")
+            @DisplayName("Then we make a call to the WeatherProvider")
             @Test
             fun callProvider() {
-                verify(currentWeatherProvider, times(1)).request(any(), any(), any())
+                verify(weatherProvider, times(1)).requestCurrentWeather(any(), any(), any())
             }
         }
     }
@@ -167,7 +167,7 @@ class CurrentWeatherRepositoryTest {
             lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
             lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_START)
             whenever(currentWeatherDao.getAllLocations()).thenReturn(listOf(locationTuple))
-            whenever(currentWeatherDao.getCurrentWeather(any(), any())).thenReturn(currentWeather)
+            whenever(currentWeatherDao.getWeather(any(), any())).thenReturn(currentWeather)
         }
 
         @Nested
@@ -180,10 +180,10 @@ class CurrentWeatherRepositoryTest {
                 locationProvider.trigger(1.0, 1.0)
             }
 
-            @DisplayName("Then we do not make a call to the CurrentWeatherProvider")
+            @DisplayName("Then we do not make a call to the WeatherProvider")
             @Test
             fun doNotCallProvider() {
-                verify(currentWeatherProvider, never()).request(any(), any(), any())
+                verify(weatherProvider, never()).requestCurrentWeather(any(), any(), any())
             }
 
             @DisplayName("Then we trigger the observer")
@@ -203,10 +203,10 @@ class CurrentWeatherRepositoryTest {
                 locationProvider.trigger(1.0, 1.0)
             }
 
-            @DisplayName("Then we make a call to the CurrentWeatherProvider")
+            @DisplayName("Then we make a call to the WeatherProvider")
             @Test
             fun doNotCallProvider() {
-                verify(currentWeatherProvider, times(1)).request(any(), any(), any())
+                verify(weatherProvider, times(1)).requestCurrentWeather(any(), any(), any())
             }
 
             @DisplayName("Then we trigger the observer")
@@ -236,8 +236,8 @@ private class TestLocationProvider : LocationProvider {
     }
 }
 
-private class TestCurrentWeatherProvider : CurrentWeatherProvider {
-    override fun request(latitude: Double, longitude: Double, callback: (CurrentWeather) -> Unit) {
+private class TestWeatherProvider : WeatherProvider {
+    override fun requestCurrentWeather(latitude: Double, longitude: Double, callback: (CurrentWeather) -> Unit) {
         callback(CurrentWeather(
                 1f,
                 1f,
@@ -253,6 +253,10 @@ private class TestCurrentWeatherProvider : CurrentWeatherProvider {
                 latitude.toFloat(),
                 longitude.toFloat()
         ))
+    }
+
+    override fun requestWeatherForecast(latitude: Double, longitude: Double, callback: (WeatherForecast) -> Unit) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun cancel() {

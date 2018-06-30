@@ -54,6 +54,6 @@ class WeatherModule {
 
     @Provides
     @Singleton
-    fun providesCurrentWeatherProvider(service: OpenWeatherMap): CurrentWeatherProvider =
+    fun providesWeatherProvider(service: OpenWeatherMap): WeatherProvider =
             OpenWeatherMapProvider(service, BuildConfig.API_KEY)
 }

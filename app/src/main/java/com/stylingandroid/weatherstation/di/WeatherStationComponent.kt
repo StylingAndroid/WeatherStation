@@ -17,6 +17,7 @@ import javax.inject.Singleton
     LocationModule::class,
     WeatherModule::class,
     ViewModelModule::class,
+    ViewModelProviderModule::class,
     DatabaseModule::class
 ])
 interface WeatherStationComponent {

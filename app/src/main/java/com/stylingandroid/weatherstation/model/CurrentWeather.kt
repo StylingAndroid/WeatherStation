@@ -19,7 +19,7 @@ data class CurrentWeather(
         val icon: String,
         val timestamp: Instant,
         @ColumnInfo(index = true)
-        val retrievalTime: Instant = Instant.now(),
-        var retrievalLatitude: Float,
-        var retrievalLongitude: Float
-)
+        override var expiryTime: Instant,
+        override var retrievalLatitude: Float,
+        override var retrievalLongitude: Float
+) : BaseWeather

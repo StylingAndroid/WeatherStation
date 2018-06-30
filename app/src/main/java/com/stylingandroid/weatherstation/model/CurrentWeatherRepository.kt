@@ -1,8 +1,7 @@
 package com.stylingandroid.weatherstation.model
 
-import androidx.lifecycle.LiveData
 import com.stylingandroid.weatherstation.location.LocationProvider
-import com.stylingandroid.weatherstation.net.CurrentWeatherProvider
+import com.stylingandroid.weatherstation.net.WeatherProvider
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.launch
 import org.threeten.bp.Duration
@@ -10,61 +9,38 @@ import org.threeten.bp.Instant
 import javax.inject.Inject
 
 
-private val validity: Long = Duration.ofMinutes(10).toMillis()
-private const val range: Double = 1000.0
-
 class CurrentWeatherRepository @Inject constructor(
-        private val locationProvider: LocationProvider,
-        private val currentWeatherProvider: CurrentWeatherProvider,
+        private val weatherProvider: WeatherProvider,
         private val currentWeatherDao: CurrentWeatherDao,
-        private val distanceChecker: DistanceChecker
-) : LiveData<CurrentWeather>() {
+        locationProvider: LocationProvider,
+        distanceChecker: DistanceChecker
+) : WeatherRepository<CurrentWeather>(distanceChecker) {
 
-    override fun onActive() {
-        super.onActive()
-        locationProvider.requestUpdates(::updateLocation)
-    }
+    private val validity: Long = Duration.ofMinutes(10).toMillis()
+    override val range: Double = 1000.0
 
-    private fun updateLocation(latitude: Double, longitude: Double) {
-        launch(CommonPool) {
-            currentWeatherDao.deleteOutdated(Instant.now().minusMillis(validity))
-            getClosestInRange(latitude, longitude)?.also {
-                postValue(it)
-            } ?: run {
-                currentWeatherProvider.request(latitude, longitude) {
-                    launch(CommonPool) {
-                        it.retrievalLatitude = latitude.toFloat()
-                        it.retrievalLongitude = longitude.toFloat()
-                        currentWeatherDao.insertCurrentWeather(it)
-                        postValue(it)
-                    }
+    val currentWeather: WeatherLiveData<CurrentWeather> =
+            WeatherLiveData(locationProvider, weatherProvider, ::updateLocation)
+
+    override fun requestWeather(latitude: Double, longitude: Double, func: (CurrentWeather) -> Unit) =
+            weatherProvider.requestCurrentWeather(latitude, longitude) {
+                launch(CommonPool) {
+                    it.retrievalLatitude = latitude.toFloat()
+                    it.retrievalLongitude = longitude.toFloat()
+                    it.expiryTime = Instant.now().plusMillis(validity)
+                    currentWeatherDao.insert(it)
+                    func(it)
                 }
             }
-        }
-    }
 
-    private fun getClosestInRange(latitude: Double, longitude: Double): CurrentWeather? {
-        return currentWeatherDao.getAllLocations().map {
-            distanceChecker.distanceBetween(
-                    latitude,
-                    longitude,
-                    it.retrievalLatitude,
-                    it.retrievalLongitude
-            ).let { distance ->
-                DistanceTuple(it.retrievalLatitude, it.retrievalLongitude, distance)
-            }
-        }.sortedBy { it.distance }
-                .firstOrNull { it.distance < range }
-                ?.let {
-                    currentWeatherDao.getCurrentWeather(it.latitude, it.longitude)
-                }
-    }
+    override fun getWeather(latitude: Double, longitude: Double): CurrentWeather =
+            currentWeatherDao.getWeather(latitude, longitude)
 
-    override fun onInactive() {
-        currentWeatherProvider.cancel()
-        locationProvider.cancelUpdates(::updateLocation)
-        super.onInactive()
-    }
+    override fun updateWeather(value: CurrentWeather) =
+            currentWeather.postValue(value)
+
+    override fun deleteOutdated(cutoff: Instant) = currentWeatherDao.deleteOutdated(cutoff)
+
+    override fun getAllLocations(): List<LocationTuple> = currentWeatherDao.getAllLocations()
 }
 
-private data class DistanceTuple(val latitude: Double, val longitude: Double, var distance: Double = 0.0)
