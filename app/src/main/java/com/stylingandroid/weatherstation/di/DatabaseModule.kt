@@ -22,6 +22,12 @@ class DatabaseModule {
     fun providesCurrentWeatherDao(database: WeatherStationDatabase) =
             database.currentWeatherDao()
 
-    @Provides fun providesDistanceChecker(): DistanceChecker =
+    @Provides
+    @Singleton
+    fun providesWeatherForecastDao(database: WeatherStationDatabase) =
+            database.weatherForecastDao()
+
+    @Provides
+    fun providesDistanceChecker(): DistanceChecker =
             LocationDistanceChecker()
 }

@@ -15,11 +15,15 @@ import androidx.fragment.app.transaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.TransitionManager
 import com.stylingandroid.weatherstation.R
 import com.stylingandroid.weatherstation.model.CurrentWeather
+import com.stylingandroid.weatherstation.model.FiveDayForecast
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_current_weather.*
+import kotlinx.android.synthetic.main.fragment_current_weather.view.*
 import javax.inject.Inject
 
 
@@ -27,9 +31,11 @@ class CurrentWeatherFragment : Fragment() {
 
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var currentWeatherViewModel: CurrentWeatherViewModel
+    private lateinit var weatherViewModel: WeatherViewModel
 
     private lateinit var converter: Converter
+
+    private lateinit var adapter: DailyForecastAdapter
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         inflater?.inflate(R.menu.main_menu, menu)
@@ -40,12 +46,18 @@ class CurrentWeatherFragment : Fragment() {
         AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
 
-        currentWeatherViewModel = ViewModelProviders.of(this, viewModelFactory)
-                .get(CurrentWeatherViewModel::class.java)
+        weatherViewModel = ViewModelProviders.of(this, viewModelFactory)
+                .get(WeatherViewModel::class.java)
 
-        currentWeatherViewModel.currentWeather.observe(this, Observer<CurrentWeather> { current ->
+        weatherViewModel.currentWeather.observe(this, Observer<CurrentWeather> { current ->
             current?.apply {
-                bind(current)
+                bindCurrent(current)
+            }
+        })
+
+        weatherViewModel.fiveDayForecast.observe(this, Observer<FiveDayForecast> { forecast ->
+            forecast?.apply {
+                bindForecast(forecast)
             }
         })
     }
@@ -54,12 +66,18 @@ class CurrentWeatherFragment : Fragment() {
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_current_weather, container, false)
+    ): View? = inflater.inflate(R.layout.fragment_current_weather, container, false).apply {
+        forecasts.apply {
+            layoutManager = LinearLayoutManager(inflater.context, RecyclerView.VERTICAL, false)
+            adapter = this@CurrentWeatherFragment.adapter
+        }
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
         converter = Converter(context)
+        adapter = DailyForecastAdapter(converter)
     }
 
     @SuppressLint("MissingPermission")
@@ -77,7 +95,7 @@ class CurrentWeatherFragment : Fragment() {
         }
     }
 
-    private fun bind(current: CurrentWeather) {
+    private fun bindCurrent(current: CurrentWeather) {
         TransitionManager.beginDelayedTransition(content_panel)
         all_widgets.visibility = View.VISIBLE
         city.text = current.placeName
@@ -94,6 +112,12 @@ class CurrentWeatherFragment : Fragment() {
                         context?.packageName
                 )
         )
+    }
+
+    private fun bindForecast(forecast: FiveDayForecast) {
+        adapter.items.clear()
+        adapter.items.addAll(forecast.days)
+        adapter.notifyDataSetChanged()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =

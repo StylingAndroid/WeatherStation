@@ -10,8 +10,9 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.stylingandroid.weatherstation.model.CurrentWeather
+import com.stylingandroid.weatherstation.model.FiveDayForecast
 import com.stylingandroid.weatherstation.ui.CurrentWeatherFragment
-import com.stylingandroid.weatherstation.ui.CurrentWeatherViewModel
+import com.stylingandroid.weatherstation.ui.WeatherViewModel
 
 internal fun Injector<Fragment>.registerCurrentWeatherFragmentInjector() =
         registerInjector<CurrentWeatherFragment> {
@@ -22,7 +23,7 @@ fun currentWeather(func: CurrentWeatherFragmentRobot.() -> Unit) =
         CurrentWeatherFragmentRobot().apply(func)
 
 class CurrentWeatherFragmentRobot {
-    private val liveData = testLiveData
+    private val liveData = currentWeather
 
     fun weatherChanged(newWeather: CurrentWeather) = liveData.postValue(newWeather)
 
@@ -34,14 +35,15 @@ class CurrentWeatherFragmentRobot {
     }
 }
 
-private val testLiveData = MutableLiveData<CurrentWeather>()
+private val currentWeather = MutableLiveData<CurrentWeather>()
+private val fiveDayForecast = MutableLiveData<FiveDayForecast>()
 
 private class TestViewModelFactory : ViewModelProvider.Factory {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return if (modelClass == CurrentWeatherViewModel::class.java) {
-            CurrentWeatherViewModel(testLiveData) as T
+        return if (modelClass == WeatherViewModel::class.java) {
+            WeatherViewModel(currentWeather, fiveDayForecast) as T
         } else {
             throw Exception("Not recognised")
         }

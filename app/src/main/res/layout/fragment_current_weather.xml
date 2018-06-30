@@ -91,7 +91,9 @@
     android:id="@+id/timestamp"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="8dp"
+    android:paddingEnd="16dp"
+    android:paddingStart="16dp"
+    android:paddingBottom="8dp"
     app:layout_constraintEnd_toEndOf="@id/type_image"
     app:layout_constraintTop_toBottomOf="@id/type_image" />
 
@@ -102,4 +104,13 @@
     android:elevation="4dp"
     android:visibility="gone"
     app:constraint_referenced_ids="card,summary,city,temperature,wind_speed,wind_direction,type_image,timestamp" />
+
+  <androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/forecasts"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/card" />
 </androidx.constraintlayout.widget.ConstraintLayout>
