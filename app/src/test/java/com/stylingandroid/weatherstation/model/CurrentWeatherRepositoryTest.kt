@@ -13,6 +13,7 @@ import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import com.stylingandroid.weatherstation.InstantTaskExecutorExtension
 import com.stylingandroid.weatherstation.location.LocationProvider
+import com.stylingandroid.weatherstation.net.Forecast
 import com.stylingandroid.weatherstation.net.WeatherProvider
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -255,7 +256,7 @@ private class TestWeatherProvider : WeatherProvider {
         ))
     }
 
-    override fun requestWeatherForecast(latitude: Double, longitude: Double, callback: (WeatherForecast) -> Unit) {
+    override fun requestWeatherForecast(latitude: Double, longitude: Double, callback: (Forecast) -> Unit) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
