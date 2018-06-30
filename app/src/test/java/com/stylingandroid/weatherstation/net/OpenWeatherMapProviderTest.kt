@@ -1,7 +1,5 @@
 package com.stylingandroid.weatherstation.net
 
-import android.content.Context
-import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.spy
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -26,10 +24,9 @@ import java.util.concurrent.TimeUnit
 private const val API_KEY = ""
 
 class OpenWeatherMapProviderTest {
-    private val context: Context = mock()
     private val mockServer = MockWebServer()
     private val responses = OpenWeatherMapResponses()
-    private val calls: MutableList<Call<Current>> = spy(mutableListOf())
+    private val calls: MutableList<Call<*>> = spy(mutableListOf())
 
     private val converterFactory = MoshiConverterFactory.create(
             Moshi.Builder()
@@ -66,7 +63,7 @@ class OpenWeatherMapProviderTest {
                     .setBody(responses.london.string()).also {
                         mockServer.enqueue(it)
                     }
-            provider.request(1.0, 1.0, consumer::consumeCurrent)
+            provider.requestCurrentWeather(1.0, 1.0, consumer::consumeCurrent)
             consumer.await()
         }
 
@@ -122,7 +119,7 @@ class OpenWeatherMapProviderTest {
         inner class MakeRequest {
             @BeforeEach
             fun setup() {
-                provider.request(1.0, 1.0, consumer::consumeCurrent)
+                provider.requestCurrentWeather(1.0, 1.0, consumer::consumeCurrent)
             }
 
             @Test
@@ -135,7 +132,7 @@ class OpenWeatherMapProviderTest {
         @Test
         @DisplayName("When we cancel the Provider Then the call is also cancelled")
         fun cancelSlowTransaction() {
-            provider.request(1.0, 1.0, consumer::consumeCurrent)
+            provider.requestCurrentWeather(1.0, 1.0, consumer::consumeCurrent)
             provider.cancel()
 
             assertThat(calls.size, equalTo(0))
