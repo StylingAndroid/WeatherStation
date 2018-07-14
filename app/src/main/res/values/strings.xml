@@ -30,6 +30,7 @@
   <string name="temperature_celsius_name">Celsius</string>
   <string name="temperature_fahrenheit_value">fahrenheit</string>
   <string name="temperature_celsius_value">celsius</string>
+  <string name="daily_forecast">Daily Forecast</string>
 
   <string-array name="temperature_entries">
     <item>@string/temperature_fahrenheit_name</item>
