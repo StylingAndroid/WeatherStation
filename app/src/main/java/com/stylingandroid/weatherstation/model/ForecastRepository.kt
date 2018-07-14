@@ -7,7 +7,6 @@ import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.launch
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
-import org.threeten.bp.ZoneId
 import org.threeten.bp.ZoneOffset
 import javax.inject.Inject
 
@@ -65,35 +64,8 @@ class ForecastRepository @Inject constructor(
             }
 
     private fun dailyItems(items: List<WeatherForecastItem>): List<FiveDayForecast.DailyItem> =
-            items.groupBy { it.timestamp.atZone(ZoneId.systemDefault()).toLocalDate() }
-                    .filter { it.value.size == 8 }
-                    .map {
-                        FiveDayForecast.DailyItem(
-                                it.key,
-                                it.value
-                                        .groupBy { it.weatherType }
-                                        .entries
-                                        .sortedByDescending { it.value.size }
-                                        .first()
-                                        .value
-                                        .first()
-                                        .weatherType,
-                                it.value
-                                        .groupBy { it.icon.dropLast(1) }
-                                        .entries
-                                        .sortedByDescending { it.value.size }
-                                        .first()
-                                        .let {
-                                            "${it.key}d"
-                                        },
-                                it.value.sumByDouble { it.windSpeed.toDouble() }
-                                        .toFloat() / 8f,
-                                (it.value.sumByDouble { it.windDirection + 360.0 }
-                                        .toFloat() / 8f) - 360f,
-                                it.value.maxBy { it.temperatureMax }?.temperatureMax ?: 0f,
-                                it.value.minBy { it.temperatureMin }?.temperatureMin ?: 0f
-                        )
-                    }
+            items.forecastsGroupedByDay()
+                    .map(Map.Entry<LocalDate, List<WeatherForecastItem>>::toDailyItem)
 
     override fun getDailyForecast(forecastId: Long, city: String, date: LocalDate): DailyForecast =
             weatherForecastDao.getWeatherForecastItemsForDateRange(
