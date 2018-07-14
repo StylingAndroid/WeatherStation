@@ -1,12 +1,16 @@
 package com.stylingandroid.weatherstation.ui
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.stylingandroid.weatherstation.R
 import com.stylingandroid.weatherstation.model.FiveDayForecast
 
-class DailyForecastAdapter(private val converter: Converter) : RecyclerView.Adapter<DailyForecastViewHolder>() {
+class DailyForecastAdapter(
+        private val converter: Converter,
+        private val listener: View.OnClickListener
+) : RecyclerView.Adapter<DailyForecastViewHolder>() {
 
     var items: MutableList<FiveDayForecast.DailyItem> = mutableListOf()
 
@@ -20,7 +24,7 @@ class DailyForecastAdapter(private val converter: Converter) : RecyclerView.Adap
 
     override fun onBindViewHolder(holder: DailyForecastViewHolder, position: Int) {
         items[position].also { item ->
-            holder.bind(item)
+            holder.bind(item, listener)
         }
     }
 }

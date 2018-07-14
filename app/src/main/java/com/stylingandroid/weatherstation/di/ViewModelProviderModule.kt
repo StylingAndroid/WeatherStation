@@ -3,6 +3,7 @@ package com.stylingandroid.weatherstation.di
 import androidx.lifecycle.LiveData
 import com.stylingandroid.weatherstation.model.CurrentWeather
 import com.stylingandroid.weatherstation.model.CurrentWeatherRepository
+import com.stylingandroid.weatherstation.model.DailyForecastProvider
 import com.stylingandroid.weatherstation.model.FiveDayForecast
 import com.stylingandroid.weatherstation.model.ForecastRepository
 import dagger.Module
@@ -19,4 +20,7 @@ class ViewModelProviderModule {
     fun providesFiveDayForecast(forecastRepository: ForecastRepository): LiveData<FiveDayForecast> =
             forecastRepository.fiveDayForecast
 
+    @Provides
+    fun providesDailyForecastProvider(forecastRepository: ForecastRepository): DailyForecastProvider =
+            forecastRepository
 }

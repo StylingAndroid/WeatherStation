@@ -5,6 +5,8 @@ import org.threeten.bp.LocalDate
 
 
 data class FiveDayForecast(
+        val forecastId: Long,
+        val city: String,
         val expiryTime: Instant,
         val days: List<DailyItem>
 ) {

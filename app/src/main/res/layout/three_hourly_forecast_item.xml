@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content">
+
+  <TextView
+    android:id="@+id/time"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="8dp"
+    android:paddingEnd="8dp"
+    android:paddingStart="8dp"
+    android:textSize="24sp"
+    app:layout_constraintBottom_toTopOf="@id/type"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="@+id/type_image"
+    app:layout_constraintVertical_chainStyle="packed"
+    tools:text="12:00" />
+
+  <TextView
+    android:id="@+id/type"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="8dp"
+    android:paddingEnd="8dp"
+    android:paddingStart="8dp"
+    android:textSize="16sp"
+    app:layout_constraintBottom_toBottomOf="@+id/type_image"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/time"
+    tools:text="Clear" />
+
+  <TextView
+    android:id="@+id/temperature_max"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="8dp"
+    android:paddingEnd="8dp"
+    android:paddingStart="8dp"
+    android:textSize="18sp"
+    app:layout_constraintBottom_toTopOf="@+id/temperature_min"
+    app:layout_constraintEnd_toStartOf="@+id/guideline"
+    app:layout_constraintTop_toTopOf="@+id/type_image"
+    app:layout_constraintVertical_chainStyle="packed"
+    tools:text="20ºC" />
+
+  <TextView
+    android:id="@+id/temperature_min"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingEnd="8dp"
+    android:paddingStart="8dp"
+    app:layout_constraintBottom_toBottomOf="@+id/type_image"
+    app:layout_constraintEnd_toEndOf="@+id/temperature_max"
+    app:layout_constraintTop_toBottomOf="@+id/temperature_max"
+    tools:text="8ºC" />
+
+  <ImageView
+    android:id="@+id/wind_direction"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="8dp"
+    android:contentDescription="@null"
+    android:importantForAccessibility="no"
+    app:layout_constraintBottom_toBottomOf="@+id/type_image"
+    app:layout_constraintEnd_toStartOf="@+id/temperature_barrier"
+    app:layout_constraintTop_toTopOf="@+id/type_image"
+    app:srcCompat="@drawable/ic_wind" />
+
+  <TextView
+    android:id="@+id/wind_speed"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:textColor="#FFF"
+    app:layout_constraintBottom_toBottomOf="@+id/wind_direction"
+    app:layout_constraintEnd_toEndOf="@+id/wind_direction"
+    app:layout_constraintStart_toStartOf="@+id/wind_direction"
+    app:layout_constraintTop_toTopOf="@+id/wind_direction"
+    tools:text="8" />
+
+  <androidx.constraintlayout.widget.Guideline
+    android:id="@+id/guideline"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:orientation="vertical"
+    app:layout_constraintGuide_end="120dp" />
+
+  <ImageView
+    android:id="@+id/type_image"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp"
+    android:contentDescription="@string/weather_type_icon"
+    android:padding="8dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toEndOf="@id/guideline"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:srcCompat="@drawable/ic_50d" />
+
+  <androidx.constraintlayout.widget.Barrier
+    android:id="@+id/temperature_barrier"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:barrierDirection="start"
+    app:constraint_referenced_ids="temperature_max,temperature_min" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -23,6 +23,9 @@ interface WeatherForecastDao {
     @Query("SELECT * FROM WeatherForecastItem WHERE forecastId = :forecastId")
     fun getWeatherForecastItems(forecastId: Long): List<WeatherForecastItem>
 
+    @Query("SELECT * FROM WeatherForecastItem WHERE forecastId = :forecastId AND timestamp BETWEEN :start AND :end")
+    fun getWeatherForecastItemsForDateRange(forecastId: Long, start: Long, end: Long): List<WeatherForecastItem>
+
     @Query("DELETE FROM WeatherForecast WHERE expiryTime < :cutoff")
     fun deleteOutdated(cutoff: Instant)
 

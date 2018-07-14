@@ -6,7 +6,9 @@ import com.stylingandroid.weatherstation.net.WeatherProvider
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.launch
 import org.threeten.bp.Instant
+import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneId
+import org.threeten.bp.ZoneOffset
 import javax.inject.Inject
 
 class ForecastRepository @Inject constructor(
@@ -14,7 +16,7 @@ class ForecastRepository @Inject constructor(
         private val weatherProvider: WeatherProvider,
         private val weatherForecastDao: WeatherForecastDao,
         distanceChecker: DistanceChecker
-) : WeatherRepository<WeatherForecast>(distanceChecker) {
+) : WeatherRepository<WeatherForecast>(distanceChecker), DailyForecastProvider {
 
     override val range: Double = 1000.0
 
@@ -58,7 +60,7 @@ class ForecastRepository @Inject constructor(
     private fun fiveDayTransformer(value: WeatherForecast): FiveDayForecast? =
             value.id?.let {
                 weatherForecastDao.getWeatherForecastItems(it).let { items ->
-                    FiveDayForecast(value.expiryTime, dailyItems(items))
+                    FiveDayForecast(it, value.placeName, value.expiryTime, dailyItems(items))
                 }
             }
 
@@ -92,4 +94,13 @@ class ForecastRepository @Inject constructor(
                                 it.value.minBy { it.temperatureMin }?.temperatureMin ?: 0f
                         )
                     }
+
+    override fun getDailyForecast(forecastId: Long, city: String, date: LocalDate): DailyForecast =
+            weatherForecastDao.getWeatherForecastItemsForDateRange(
+                    forecastId,
+                    date.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli(),
+                    date.atTime(23, 59).toInstant(ZoneOffset.UTC).toEpochMilli()
+            ).let { items ->
+                DailyForecast(date, city, items)
+            }
 }

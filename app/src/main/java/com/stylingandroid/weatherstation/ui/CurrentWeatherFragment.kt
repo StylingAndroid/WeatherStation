@@ -24,10 +24,11 @@ import com.stylingandroid.weatherstation.model.FiveDayForecast
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_current_weather.*
 import kotlinx.android.synthetic.main.fragment_current_weather.view.*
+import org.threeten.bp.LocalDate
 import javax.inject.Inject
 
 
-class CurrentWeatherFragment : Fragment() {
+class CurrentWeatherFragment : Fragment(), View.OnClickListener {
 
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -35,7 +36,10 @@ class CurrentWeatherFragment : Fragment() {
 
     private lateinit var converter: Converter
 
-    private lateinit var adapter: DailyForecastAdapter
+    private lateinit var dailyForecastAdapter: DailyForecastAdapter
+
+    private var currentFiveDayForecast: FiveDayForecast? = null
+    private var currentWeather: CurrentWeather? = null
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         inflater?.inflate(R.menu.main_menu, menu)
@@ -69,7 +73,22 @@ class CurrentWeatherFragment : Fragment() {
     ): View? = inflater.inflate(R.layout.fragment_current_weather, container, false).apply {
         forecasts.apply {
             layoutManager = LinearLayoutManager(inflater.context, RecyclerView.VERTICAL, false)
-            adapter = this@CurrentWeatherFragment.adapter
+            adapter = dailyForecastAdapter
+        }
+    }
+
+    override fun onClick(view: View) {
+        forecasts.getChildAdapterPosition(view).also { position ->
+            showDailyForecast(dailyForecastAdapter.items[position].date)
+        }
+    }
+
+    private fun showDailyForecast(date: LocalDate) {
+        currentFiveDayForecast?.also {
+            fragmentManager?.transaction {
+                replace(R.id.activity_main, createDailyForecastFragment(it.forecastId, it.city, date))
+                addToBackStack(DailyForecastFragment::class.java.simpleName)
+            }
         }
     }
 
@@ -77,7 +96,7 @@ class CurrentWeatherFragment : Fragment() {
         super.onAttach(context)
 
         converter = Converter(context)
-        adapter = DailyForecastAdapter(converter)
+        dailyForecastAdapter = DailyForecastAdapter(converter, this)
     }
 
     @SuppressLint("MissingPermission")
@@ -96,7 +115,9 @@ class CurrentWeatherFragment : Fragment() {
     }
 
     private fun bindCurrent(current: CurrentWeather) {
-        TransitionManager.beginDelayedTransition(content_panel)
+        if (all_widgets.visibility != View.VISIBLE && currentWeather == null && currentFiveDayForecast != null)
+            TransitionManager.beginDelayedTransition(content_panel)
+        currentWeather = current
         all_widgets.visibility = View.VISIBLE
         city.text = current.placeName
         temperature.text = converter.temperature(current.temperature)
@@ -115,9 +136,10 @@ class CurrentWeatherFragment : Fragment() {
     }
 
     private fun bindForecast(forecast: FiveDayForecast) {
-        adapter.items.clear()
-        adapter.items.addAll(forecast.days)
-        adapter.notifyDataSetChanged()
+        currentFiveDayForecast = forecast
+        dailyForecastAdapter.items.clear()
+        dailyForecastAdapter.items.addAll(forecast.days)
+        dailyForecastAdapter.notifyDataSetChanged()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =

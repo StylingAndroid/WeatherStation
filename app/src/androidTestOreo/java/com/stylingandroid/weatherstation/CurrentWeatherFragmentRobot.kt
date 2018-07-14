@@ -10,9 +10,12 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.stylingandroid.weatherstation.model.CurrentWeather
+import com.stylingandroid.weatherstation.model.DailyForecast
+import com.stylingandroid.weatherstation.model.DailyForecastProvider
 import com.stylingandroid.weatherstation.model.FiveDayForecast
 import com.stylingandroid.weatherstation.ui.CurrentWeatherFragment
 import com.stylingandroid.weatherstation.ui.WeatherViewModel
+import org.threeten.bp.LocalDate
 
 internal fun Injector<Fragment>.registerCurrentWeatherFragmentInjector() =
         registerInjector<CurrentWeatherFragment> {
@@ -37,13 +40,18 @@ class CurrentWeatherFragmentRobot {
 
 private val currentWeather = MutableLiveData<CurrentWeather>()
 private val fiveDayForecast = MutableLiveData<FiveDayForecast>()
+private val dailyForecastProvider = object : DailyForecastProvider {
+
+    override fun getDailyForecast(forecastId: Long, city: String, date: LocalDate): DailyForecast =
+            DailyForecast(LocalDate.now(), city, emptyList())
+}
 
 private class TestViewModelFactory : ViewModelProvider.Factory {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return if (modelClass == WeatherViewModel::class.java) {
-            WeatherViewModel(currentWeather, fiveDayForecast) as T
+            WeatherViewModel(currentWeather, fiveDayForecast, dailyForecastProvider) as T
         } else {
             throw Exception("Not recognised")
         }
