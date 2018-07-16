@@ -1,20 +1,19 @@
 package com.stylingandroid.weatherstation.ui
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.transaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.TransitionManager
@@ -38,17 +37,16 @@ class CurrentWeatherFragment : Fragment(), View.OnClickListener {
 
     private lateinit var dailyForecastAdapter: DailyForecastAdapter
 
+    private lateinit var navController: NavController
+
     private var currentFiveDayForecast: FiveDayForecast? = null
     private var currentWeather: CurrentWeather? = null
-
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.main_menu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
+
+        navController = findNavController(this)
 
         weatherViewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(WeatherViewModel::class.java)
@@ -64,6 +62,11 @@ class CurrentWeatherFragment : Fragment(), View.OnClickListener {
                 bindForecast(forecast)
             }
         })
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.main_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onCreateView(
@@ -85,10 +88,13 @@ class CurrentWeatherFragment : Fragment(), View.OnClickListener {
 
     private fun showDailyForecast(date: LocalDate) {
         currentFiveDayForecast?.also {
-            fragmentManager?.transaction {
-                replace(R.id.activity_main, createDailyForecastFragment(it.forecastId, it.city, date))
-                addToBackStack(DailyForecastFragment::class.java.simpleName)
-            }
+            val direction = CurrentWeatherFragmentDirections.actionCurrentWeatherFragmentToDailyForecastFragment(
+                            it.city,
+                            it.forecastId,
+                            date.toEpochDay()
+                    )
+
+            navController.navigate(direction)
         }
     }
 
@@ -99,18 +105,10 @@ class CurrentWeatherFragment : Fragment(), View.OnClickListener {
         dailyForecastAdapter = DailyForecastAdapter(converter, this)
     }
 
-    @SuppressLint("MissingPermission")
     override fun onResume() {
         super.onResume()
-
-        context?.apply {
-            if (this is AppCompatActivity) {
-                supportActionBar?.apply {
-                    title = getString(R.string.current_weather)
-                    setHasOptionsMenu(true)
-                    setDisplayHomeAsUpEnabled(false)
-                }
-            }
+        (context as? AppCompatActivity)?.supportActionBar?.apply {
+            setHasOptionsMenu(true)
         }
     }
 
@@ -141,16 +139,4 @@ class CurrentWeatherFragment : Fragment(), View.OnClickListener {
         dailyForecastAdapter.items.addAll(forecast.days)
         dailyForecastAdapter.notifyDataSetChanged()
     }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean =
-            when (item.itemId) {
-                R.id.action_settings -> {
-                    fragmentManager?.transaction(allowStateLoss = true) {
-                        replace(R.id.activity_main, PreferencesFragment())
-                        addToBackStack(PreferencesFragment::class.java.simpleName)
-                    }
-                    true
-                }
-                else -> super.onOptionsItemSelected(item)
-            }
 }

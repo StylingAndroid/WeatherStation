@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:id="@+id/weather_navigation"
+  app:startDestination="@id/currentWeatherFragment">
+
+  <fragment
+    android:id="@+id/currentWeatherFragment"
+    android:name="com.stylingandroid.weatherstation.ui.CurrentWeatherFragment"
+    android:label="@string/current_weather">
+    <action
+      android:id="@+id/action_currentWeatherFragment_to_dailyForecastFragment"
+      app:destination="@id/dailyForecastFragment"
+      app:popUpTo="@+id/currentWeatherFragment" />
+  </fragment>
+  <fragment
+    android:id="@+id/dailyForecastFragment"
+    android:name="com.stylingandroid.weatherstation.ui.DailyForecastFragment"
+    android:label="@string/daily_forecast">
+    <argument
+      android:name="city"
+      app:type="string" />
+    <argument
+      android:name="forecastId"
+      app:type="long" />
+    <argument
+      android:name="date"
+      app:type="long" />
+  </fragment>
+  <fragment
+    android:id="@+id/noPermissionFragment"
+    android:name="com.stylingandroid.weatherstation.ui.NoPermissionFragment"
+    android:label="NoPermissionFragment" />
+  <action
+    android:id="@+id/noPermission"
+    app:destination="@id/noPermissionFragment"
+    app:launchSingleTop="false"
+    app:popUpTo="@+id/weather_navigation"
+    app:popUpToInclusive="true" />
+  <action
+    android:id="@+id/currentWeather"
+    app:destination="@+id/currentWeatherFragment" />
+  <fragment
+    android:id="@+id/preferencesFragment"
+    android:name="com.stylingandroid.weatherstation.ui.PreferencesFragment"
+    android:label="Units" />
+  <action
+    android:id="@+id/to_preferences"
+    app:destination="@id/preferencesFragment" />
+</navigation>

@@ -6,6 +6,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: "androidx.navigation.safeargs"
 apply plugin: "de.mannodermaus.android-junit5"
 apply plugin: "jacoco"
 
@@ -70,6 +71,8 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.0.0-beta01'
     implementation 'androidx.fragment:fragment-ktx:1.0.0-beta01'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0-beta01'
+    implementation "android.arch.navigation:navigation-fragment-ktx:1.0.0-alpha03"
+    implementation "android.arch.navigation:navigation-ui-ktx:1.0.0-alpha03"
     implementation 'com.google.android.gms:play-services-location:15.0.1'
     implementation 'com.google.android.material:material:1.0.0-beta01'
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'

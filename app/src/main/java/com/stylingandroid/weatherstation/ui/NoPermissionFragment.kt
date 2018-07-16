@@ -1,6 +1,5 @@
 package com.stylingandroid.weatherstation.ui
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,16 +11,13 @@ import com.stylingandroid.weatherstation.R
 class NoPermissionFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        inflater.inflate(R.layout.fragment_no_permission, container, false)
+            inflater.inflate(R.layout.fragment_no_permission, container, false)
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
+    override fun onResume() {
+        super.onResume()
 
-        if (context is AppCompatActivity) {
-            context.supportActionBar?.apply {
-                setTitle(R.string.app_name)
-            }
+        (context as? AppCompatActivity)?.supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(false)
         }
     }
-
 }

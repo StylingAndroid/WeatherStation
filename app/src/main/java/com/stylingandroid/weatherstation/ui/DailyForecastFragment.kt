@@ -3,7 +3,8 @@ package com.stylingandroid.weatherstation.ui
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MenuItem
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
@@ -23,19 +24,6 @@ import kotlinx.coroutines.experimental.withContext
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import javax.inject.Inject
-
-fun createDailyForecastFragment(forecastId: Long, city: String, date: LocalDate) =
-        DailyForecastFragment().apply {
-            arguments = Bundle().apply {
-                putLong(EXTRA_FORECAST_ID, forecastId)
-                putString(EXTRA_CITY, city)
-                putSerializable(EXTRA_DATE, date)
-            }
-        }
-
-private const val EXTRA_FORECAST_ID = "EXTRA_FORECAST_ID"
-private const val EXTRA_CITY = "EXTRA_CITY"
-private const val EXTRA_DATE = "EXTRA_DATE"
 
 class DailyForecastFragment : Fragment() {
 
@@ -61,24 +49,11 @@ class DailyForecastFragment : Fragment() {
 
         converter = Converter(context)
         threeHourlyForecastAdapter = ThreeHourlyForecastAdapter(converter)
-
-        if (context is AppCompatActivity) {
-            context.supportActionBar?.apply {
-                setDisplayHomeAsUpEnabled(true)
-                setTitle(R.string.daily_forecast)
-                setHasOptionsMenu(true)
-            }
-        }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            android.R.id.home -> {
-                fragmentManager?.popBackStack()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.main_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onCreateView(
@@ -86,10 +61,10 @@ class DailyForecastFragment : Fragment() {
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        val forecastId = savedInstanceState?.getLong(EXTRA_FORECAST_ID) ?: arguments?.getLong(EXTRA_FORECAST_ID)
-        val city = savedInstanceState?.getString(EXTRA_CITY) ?: arguments?.getString(EXTRA_CITY)
-        val date = (savedInstanceState?.getSerializable(EXTRA_DATE)
-                ?: arguments?.getSerializable(EXTRA_DATE)) as LocalDate?
+        val args = (savedInstanceState ?: arguments).let { DailyForecastFragmentArgs.fromBundle(it) }
+        val forecastId = args?.forecastId
+        val city = args?.city
+        val date = args?.date?.let {LocalDate.ofEpochDay(it) }
 
         if (forecastId == null || city == null || date == null)
             throw IllegalArgumentException("Missing either forecastId, city or date")
@@ -100,6 +75,13 @@ class DailyForecastFragment : Fragment() {
                 adapter = threeHourlyForecastAdapter
             }
             loadDailyForecast(forecastId, city, date)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (context as? AppCompatActivity)?.supportActionBar?.apply {
+            setHasOptionsMenu(true)
         }
     }
 
