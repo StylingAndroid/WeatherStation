@@ -233,7 +233,7 @@ private class TestLocationProvider : LocationProvider {
 
     fun trigger(latitude: Double = 1.0, longitude: Double = 1.0) {
         action?.invoke(latitude, longitude)
-        Thread.sleep(50L)
+        Thread.sleep(100L)
     }
 }
 
