@@ -19,13 +19,13 @@
     android:label="@string/daily_forecast">
     <argument
       android:name="city"
-      app:type="string" />
+      app:argType="string" />
     <argument
       android:name="forecastId"
-      app:type="long" />
+      app:argType="long" />
     <argument
       android:name="date"
-      app:type="long" />
+      app:argType="long" />
   </fragment>
   <fragment
     android:id="@+id/noPermissionFragment"

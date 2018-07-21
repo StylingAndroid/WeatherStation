@@ -60,7 +60,7 @@ class DailyForecastFragment : Fragment() {
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        val args = (savedInstanceState ?: arguments).let { DailyForecastFragmentArgs.fromBundle(it) }
+        val args: DailyForecastFragmentArgs? = (savedInstanceState ?: arguments).let { DailyForecastFragmentArgs.fromBundle(it) }
         val forecastId = args?.forecastId
         val city = args?.city
         val date = args?.date?.let { LocalDate.ofEpochDay(it) }
