@@ -16,8 +16,6 @@ class NoPermissionFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        (context as? AppCompatActivity)?.supportActionBar?.apply {
-            setDisplayHomeAsUpEnabled(false)
-        }
+        (context as? AppCompatActivity)?.supportActionBar?.setDisplayHomeAsUpEnabled(false)
     }
 }

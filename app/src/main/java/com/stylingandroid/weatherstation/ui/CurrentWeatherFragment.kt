@@ -7,7 +7,6 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -29,7 +28,8 @@ import javax.inject.Inject
 
 class CurrentWeatherFragment : Fragment(), View.OnClickListener {
 
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var weatherViewModel: WeatherViewModel
 
@@ -52,14 +52,14 @@ class CurrentWeatherFragment : Fragment(), View.OnClickListener {
                 .get(WeatherViewModel::class.java)
 
         weatherViewModel.currentWeather.observe(this, Observer<CurrentWeather> { current ->
-            current?.apply {
-                bindCurrent(current)
+            current?.let {
+                bindCurrent(it)
             }
         })
 
         weatherViewModel.fiveDayForecast.observe(this, Observer<FiveDayForecast> { forecast ->
-            forecast?.apply {
-                bindForecast(forecast)
+            forecast?.let {
+                bindForecast(it)
             }
         })
     }
@@ -89,10 +89,10 @@ class CurrentWeatherFragment : Fragment(), View.OnClickListener {
     private fun showDailyForecast(date: LocalDate) {
         currentFiveDayForecast?.also {
             val direction = CurrentWeatherFragmentDirections.actionCurrentWeatherFragmentToDailyForecastFragment(
-                            it.city,
-                            it.forecastId,
-                            date.toEpochDay()
-                    )
+                    it.city,
+                    it.forecastId,
+                    date.toEpochDay()
+            )
 
             navController.navigate(direction)
         }
@@ -107,9 +107,7 @@ class CurrentWeatherFragment : Fragment(), View.OnClickListener {
 
     override fun onResume() {
         super.onResume()
-        (context as? AppCompatActivity)?.supportActionBar?.apply {
-            setHasOptionsMenu(true)
-        }
+        setHasOptionsMenu(true)
     }
 
     private fun bindCurrent(current: CurrentWeather) {

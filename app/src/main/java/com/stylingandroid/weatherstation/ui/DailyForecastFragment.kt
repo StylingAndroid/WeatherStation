@@ -7,7 +7,6 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -64,7 +63,7 @@ class DailyForecastFragment : Fragment() {
         val args = (savedInstanceState ?: arguments).let { DailyForecastFragmentArgs.fromBundle(it) }
         val forecastId = args?.forecastId
         val city = args?.city
-        val date = args?.date?.let {LocalDate.ofEpochDay(it) }
+        val date = args?.date?.let { LocalDate.ofEpochDay(it) }
 
         if (forecastId == null || city == null || date == null)
             throw IllegalArgumentException("Missing either forecastId, city or date")
@@ -80,9 +79,7 @@ class DailyForecastFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        (context as? AppCompatActivity)?.supportActionBar?.apply {
-            setHasOptionsMenu(true)
-        }
+        setHasOptionsMenu(true)
     }
 
     private fun loadDailyForecast(forecastId: Long, city: String, date: LocalDate) = async(UI) {

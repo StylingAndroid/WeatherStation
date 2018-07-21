@@ -39,7 +39,9 @@
     app:popUpToInclusive="true" />
   <action
     android:id="@+id/currentWeather"
-    app:destination="@+id/currentWeatherFragment" />
+    app:destination="@+id/currentWeatherFragment"
+    app:launchSingleTop="true"
+    app:popUpToInclusive="true" />
   <fragment
     android:id="@+id/preferencesFragment"
     android:name="com.stylingandroid.weatherstation.ui.PreferencesFragment"
